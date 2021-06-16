@@ -1,26 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Hospital Appointment</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="icon" href="img/hospital.png" sizes="16x16" type="image/png">
-</head>
-<body>
-	<section>	
-		<nav class="navber">
-		<h1>
-			<span class="logo-text">Hospital
-			</span>Appointment
-		</h1>
-		<ul>
-			<li> <a href="#">Home</a></li>
-			<li> <a href="#about">About</a></li>
-			<li> <a href="#doctor">Doctor</a></li>
-			<li> <a href="#department">Department</a></li>
-			<li> <a href="#contact">Contact</a></li>
-			<li> <a href="login.php">Login</a></li>
-		</ul>
-	</nav>
+    <head>   
+        <title>Home</title>
+        <?php include_once('bootstrap.php'); ?>
+    </head>
+    <body>
+
+        <?php include_once('index_header.php'); ?>
 		<div class="header-showcase">
 		<div class="full">
 			<div class="header-text text-center">

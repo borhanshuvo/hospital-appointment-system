@@ -1,8 +1,8 @@
 <?php
-	 $serverName="localhost";
-	 $userName="root";
-	 $password="";
-	 $dbName="hospital";
+	 $serverName = "localhost";
+	 $userName   = "root";
+	 $password   = "";
+	 $dbName     = "hospital";
 	function execute($query) //executing non query
 	{
 		global $serverName;
@@ -16,10 +16,13 @@
 	
 	function get($query)
 	{   
-        $data=array();//numeric array
-		global $serverName,$userName,$password,$dbName;
-		$conn = mysqli_connect( $serverName, $userName, $password, $dbName);
-        $result=mysqli_query($conn,$query);
+		global $serverName;
+		global $userName;
+		global $password;
+		global $dbName;
+		$data   = array();
+		$conn   = mysqli_connect( $serverName, $userName, $password, $dbName);
+        $result = mysqli_query($conn,$query);
         if(mysqli_num_rows($result) > 0)
         {
             while($row = mysqli_fetch_assoc($result))
@@ -32,7 +35,7 @@
                 $data[] = $entity;																
             }
         }
-        
+
         mysqli_close($conn);
         
 		return $data;

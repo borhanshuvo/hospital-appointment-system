@@ -3,102 +3,160 @@
     { 
         session_start(); 
     }
-	include '../models/database.php';
-	$uname="";
-	$err_uname="";
-	$pass="";
-	$err_pass="";
-	$err_invalid="";
+
+	$email="";
+	$err_email="";
+
+	$password="";
+	$err_password="";
+
+	$err_msg="";
 	$has_error=false;
 
 	if(isset($_POST['submit']))
 	{	
-		if(empty($_POST['uname']))
+		if(empty($_POST['email']))
 		{
-			$err_uname="*Username Required";
+			$err_email="*Email Required";
 			$has_error=true;
 		}
 		else
 		{
-			$uname=$_POST['uname'];
+			$email=$_POST['email'];
 		}
-		if(empty($_POST['pass']))
+
+		if(empty($_POST['password']))
 		{
-			$err_pass="*Password Required";
+			$err_password="*Password Required";
 			$has_error=true;
 		}
-		else
+		else 
 		{
-			$pass=$_POST['pass'];
+			$password=$_POST['password'];
 		}
+
 		if(!$has_error)
 		{
-			$query="SELECT * FROM login WHERE email='$uname' AND password='$pass'";
-			$result=get($query);
+			require_once '../controllers/user_Controller.php';
+			$users = getAllUser();
 			
-			if(count($result)>0)
-			{
-				$rs=$result[0];
-				$status=$rs['user_type'];
-				if($status=='super_admin')
-				{
-					$email = $rs['email'];
-					setcookie("loggedinuser",$rs['email'],time()+18000);
-					header("location:super_admin.php?email=$email");
-				}
-				elseif($status=='admin')
-				{
-					$email = $rs['email'];
-					setcookie("loggedinuser",$rs['email'],time()+18000);
-					header("location:admin.php?email=$email");
-				}
-				elseif($status=='doctor')
-				{
-					$email = $rs['email'];
-					setcookie("loggedinuser",$rs['email'],time()+18000);
-					header("location:doctor.php?email=$email");
-				}
-				else
-				{
-					$email = $rs['email'];
-					setcookie("loggedinuser",$rs['email'],time()+18000);
-					header("location:patient.php?email=$email");
-				}
+			foreach($users as $user)
+            {
+            	$password = sha1($_POST['password']);
 
-			}
-			else
-			{
-				$err_invalid="** Invalid Username or Password **";
-			}
+            	if ( $_POST['email'] == $user["email"] && $password == $user["password"] ) 
+            	{
+            		$user_type = $user["user_type"];
+            		$status    = $user["status"];
+            		if ( $user_type == 'super_admin' )
+            		{
+            			$f_name                 = $user["f_name"];
+            			$l_name                 = $user["l_name"];
+            			$full_name              = $f_name.' '.$l_name;
+            			$_SESSION['name']       = $full_name;
+            			$_SESSION['user_types'] = $user_type;
+            			$email                  = $user["email"];
+						setcookie("loggedinuser",$email,time()+18000);
+            			header("location:dashboard.php");
+            		}
+
+					elseif( $user_type == 'admin' && $status == 1)
+					{
+            			$f_name                 = $user["f_name"];
+            			$l_name                 = $user["l_name"];
+            			$full_name              = $f_name.' '.$l_name;
+            			$_SESSION['name']       = $full_name;
+            			$_SESSION['user_types'] = $user_type;
+            			$email                  = $user["email"];
+						setcookie("loggedinuser",$email,time()+18000);
+            			header("location:dashboard.php");
+            		}
+
+					elseif( $user_type == 'doctor' && $status == 1)
+					{
+            			$f_name                 = $user["f_name"];
+            			$l_name                 = $user["l_name"];
+            			$full_name              = $f_name.' '.$l_name;
+            			$_SESSION['name']       = $full_name;
+            			$_SESSION['user_types'] = $user_type;
+            			$email                  = $user["email"];
+						setcookie("loggedinuser",$email,time()+18000);
+            			header("location:dashboard.php");
+            		}
+
+            		elseif( $user_type == 'patient' && $status == 1)
+					{
+            			$f_name                 = $user["f_name"];
+            			$l_name                 = $user["l_name"];
+            			$full_name              = $f_name.' '.$l_name;
+            			$_SESSION['name']       = $full_name;
+            			$_SESSION['user_types'] = $user_type;
+            			$email                  = $user["email"];
+						setcookie("loggedinuser",$email,time()+18000);
+            			header("location:dashboard.php");
+            		}
+
+					else
+					{
+						$err_msg = "* User Not Exits";
+					}
+            	} 
+            	else
+				{
+					$err_msg="*Username or Password Incorrect";
+				}
+                
+            } 
 		}
 	}
 ?>
-
+<!DOCTYPE html>
 <html>
-	<center>
 	<head>
 		<title>Login</title>
-		<link rel="stylesheet" type="text/css" href="css/loginstyle.css">
-		<link rel="icon" href="img/hospital.png" sizes="16x16" type="image/png">
+		<?php include_once('css/bootstrap.php'); ?>
 	</head> 
 	<body>
-		<div class="login-box">
-			<img src="img/login.png" class="avater">
-			<h6>Login Here</h6>
-			<form method="post" action="">
-				<div class="textbox">
-					<input type="email" placeholder="Email" value="<?php echo $uname;?>" name="uname">		
+		<?php include_once('home_header.php'); ?>
+		<main>
+			
+			<div class="container d-flex justify-content-center card w-50">
+				<div class="card-header">
+					<h4 class="text-center">Login</h4>
 				</div>
-					<span style="color:red"><?php echo $err_uname;?></span>
-				<div class="textbox">
-					<input type="password" placeholder="Password" value="<?php echo $pass;?>" name="pass">
+
+				<form action="" method="POST" class="row">
+
+				<div class="card-body">
+					
+				  <div class="col-12 pb-1">
+				    <label for="email" class="form-label">Email</label>
+				    <input type="email" name="email" class="form-control" id="email" value="<?php echo $email;?>" autocomplete="off" onkeyup="checkEmail()" onblur="checkEmail()">
+				    <span style="color:red" id="err_email"><?php echo $err_email;?></span>
+				  </div>
+
+				   <div class="col-12 pb-2">
+				    <label for="password" class="form-label">Password</label>
+				    <input type="password" name="password" class="form-control" id="password" autocomplete="off" onkeyup="checkPassword()" onblur="checkPassword()">
+				    <span style="color:red" id="err_password"><?php echo $err_password;?></span>
+				  </div>
+				  <div class="col-12 pb-1">
+				  	<input type="checkbox" onclick="passwordShow()"> Show Password
+				  </div>
+
 				</div>
-					<span style="color:red"><?php echo $err_pass;?></span>
-					<input class="btn" type="submit" value="Sign In" name="submit">
-					<center><a href="formPatient.php">Don't Have Account</a></center>
-		    </form>
-		    	<span style="color:red"><?php echo $err_invalid;?></span>
-		</div>
+
+				<div class="card-footer">
+					<div class="col-12 d-flex justify-content-end">
+					    <input type="submit" name="submit" class="btn btn-primary" value="Sign In">
+					</div>
+					<span style="color:red"><?php echo $err_msg;?></span>
+				</div>
+
+				</form>
+			</div>
+
+		</main>
+		<?php include_once('js/javascript.php'); ?>
 	</body>
-	</center>
 </html>

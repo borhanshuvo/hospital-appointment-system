@@ -3,97 +3,70 @@
     { 
         session_start(); 
     }
+
 	require_once '../models/database.php';
-	if(isset($_GET['req']) && $_GET['req'] == 'add_doct')
+
+	if(isset($_GET['req']) && $_GET['req'] == 'add_doc')
 	{
 		insertDoctor();
 	}
+
 	elseif(isset($_POST['edit_doctor']))
 	{
 		editDoctor();
 	}
-	function getAllDoctor()
-	{
-		$query="SELECT * FROM add_Doctor";
-		$doctors=get($query);
-		return $doctors;
-	}
-	function deleteDoctor($id)
-	{
-		$query="DELETE FROM add_Doctor WHERE id=$id";
-    	$doctor=get($query);
-		return $doctor[0];	
-	}
-	function getDoctor($id)
-	{
-		$query="SELECT * FROM add_Doctor WHERE id=$id";
-		$doctor=get($query);
-		return $doctor[0];
-	}
+
 	function insertDoctor()
 	{
-		$f_name=$_SESSION['f_name'];
-		$l_name=$_SESSION['l_name'];
-		$gender=$_SESSION['gender'];
-		$blood_type=$_SESSION['blood'];
-		$mobile_no=$_SESSION['mobile_no'];
-		$birth_date=$_SESSION['b_date'];
-		$email=$_SESSION['email'];
-		$department=$_SESSION['dept'];
-		$designation=$_SESSION['desi'];
-		$qualification=$_SESSION['edu'];
-		$specialist=$_SESSION['sp_list'];
-		$present_address=$_SESSION['address'];
-		$permanent_address=$_SESSION['address2'];
-		$city=$_SESSION['city'];
-		$name=($f_name.' '.$l_name);
-		$password=$_SESSION['pass'];
-		$user_type='doctor';
-		$target_file= $_SESSION['img'];
+		$f_name 	 = $_SESSION['f_name'];
+		$l_name 	 = $_SESSION['l_name'];
+		$gender 	 = $_SESSION['gender'];
+		$blood_group = $_SESSION['blood'];
+		$mobile_no   = $_SESSION['mobile_no'];
+		$birth_date  = $_SESSION['b_date'];
+		$email 		 = $_SESSION['email'];
+		$password 	 = $_SESSION['password'];
+		$address 	 = $_SESSION['address'];
+		$picture     = $_SESSION['img'];
+		$status      = $_SESSION['status'];
+		$user_type   = 'doctor';
 
-		$query="INSERT INTO add_Doctor VALUEs(NULL,'$f_name','$l_name','$gender','$blood_type','$mobile_no','$birth_date','$email','$department','$designation','$qualification','$specialist','$present_address','$permanent_address','$city','$target_file')";
-		//$query2="INSERT INTO login VALUEs(NULL,'$name','$email','$password','$user_type')";
+		$query = "INSERT INTO users VALUEs(NULL, '$f_name', '$l_name', '$gender', '$blood_group', '$mobile_no', '$birth_date', '$email', '$password', '$address', '$picture', '$status', '$user_type')";
+	
 		execute($query);
-		//execute($query2);
-		header('Location:../views/addDoctor.php');
+
+		header('Location:../views/list_doctor.php');
 	}
+
 	function editDoctor()
 	{
-		$target_file=$_POST["prev_image"];
-		$id=$_POST['id'];
-		$f_name=$_POST['f_name'];
-		$l_name=$_POST['l_name'];
-		$gender=$_POST['gender'];
-		$blood_type=$_POST['blood'];
-		$mobile_no=$_POST['mobile_no'];
-		$birth_date=$_POST['b_date'];
-		$email=$_POST['email'];
-		$department=$_POST['dept'];
-		$designation=$_POST['desi'];
-		$qualification=$_POST['edu'];
-		$specialist=$_POST['sp_list'];
-		$present_address=$_POST['address'];
-		$permanent_address=$_POST['address2'];
-		$city=$_POST['city'];
-		
-		$u_id=$_POST['u_id'];
-		$name=($f_name.' '.$l_name);
-		$password=$_POST['pass'];
-		$user_type='doctor';
-		if(file_exists($_FILES['picture']['tmp_name']) || is_uploaded_file($_FILES['picture']['tmp_name'])) 
+		$id          = $_POST['id'];
+		$f_name 	 = $_POST['f_name'];
+		$l_name 	 = $_POST['l_name'];
+		$gender 	 = $_POST['gender'];
+		$blood_group = $_POST['blood'];
+		$mobile_no   = $_POST['mobile_no'];
+		$birth_date  = $_POST['b_date'];
+		$email 		 = $_POST['email'];
+		$password 	 = $_POST['password'];
+		$address 	 = $_POST['address'];
+		$picture     = $_POST["prev_image"];
+		$status      = $_POST['status'];
+		$user_type   = 'doctor';
+
+		if(file_exists($_FILES['img']['tmp_name']) || is_uploaded_file($_FILES['img']['tmp_name'])) 
 		{
 			$target_dir="../storage/doctor_image/";
-			$target_file = $target_dir . basename($_FILES["picture"]["name"]);
-			$uploadOk = 1;
-			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-			move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file);
+			$target_file = $target_dir . basename($_FILES["img"]["name"]);
+			move_uploaded_file($_FILES["img"]["tmp_name"], $target_file);
+			$picture = $target_file;
 		}
 
-		$query="UPDATE add_Doctor SET f_name='$f_name',l_name='$l_name',gender='$gender',blood_type='$blood_type',mobile_no='$mobile_no',birth_date='$birth_date',email='$email',department='$department',designation='$designation',qualification='$qualification',specialist='$specialist',present_address='$present_address',permanent_address='$permanent_address',city='$city',picture='$target_file' WHERE id=$id";
-		$query2="UPDATE login SET name='$name',email='$email',password='$password',user_type='$user_type' WHERE u_id=$u_id";
+		$query = "UPDATE users SET f_name='$f_name', l_name='$l_name', gender='$gender', blood_group='$blood_group', mobile_no='$mobile_no', birth_date='$birth_date', email='$email', password='$password', address='$address', picture='$picture', status='$status', user_type='$user_type' WHERE id=$id";
+		
 		execute($query);
-		execute($query2);
-		header('Location:../views/listDoctor.php');
+		
+		header("Location:../views/list_doctor.php");
 
 	}
  ?>
