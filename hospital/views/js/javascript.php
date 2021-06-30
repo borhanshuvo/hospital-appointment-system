@@ -283,4 +283,19 @@ function confirmPasswordShow()
 		value.type = "password";
 	}
 }
+
+function checkMessage()
+{
+    if (document.getElementById("message").value == "")
+    {
+        document.getElementById("err_message").innerHTML = "*Message Required";
+        document.getElementById("err_message").style.color = "red";
+        document.getElementById("message").style.borderColor = "red";
+    }
+    else
+    {
+        document.getElementById("err_message").innerHTML = "";
+        document.getElementById("message").style.borderColor = "black";
+    } 
+}
 </script>

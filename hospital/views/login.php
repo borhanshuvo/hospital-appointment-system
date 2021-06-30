@@ -118,9 +118,9 @@
 	</head> 
 	<body>
 		<?php include_once('home_header.php'); ?>
-		<main>
+		<main class="pt-5 mt-5">
 			
-			<div class="container d-flex justify-content-center card w-50">
+			<div class="container mt-5 d-flex justify-content-center card w-50">
 				<div class="card-header">
 					<h4 class="text-center">Login</h4>
 				</div>
